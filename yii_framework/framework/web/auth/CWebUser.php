@@ -235,10 +235,14 @@ class CWebUser extends CApplicationComponent implements IWebUser
 			if($duration>0)
 			{
 				if($this->allowAutoLogin)
+				{
 					$this->saveToCookie($duration);
+				}
 				else
+				{
 					throw new CException(Yii::t('yii','{class}.allowAutoLogin must be set true in order to use cookie-based authentication.',
 						array('{class}'=>get_class($this))));
+				}
 			}
 
 			if ($this->absoluteAuthTimeout)
