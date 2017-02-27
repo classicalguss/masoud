@@ -103,7 +103,7 @@ class ApiController extends Controller
 	{
 		if (Yii::app()->user->isGuest == false)
 		{
-			echo json_encode(array('status' =>'logged_in','message'=>'User is already logged in.'));
+			echo json_encode(array('status' =>'logged_in','message'=>'User is already logged in'));
 			Yii::app()->end();
 		}
 		$deviceToken 	= Yii::app()->request->getPost('device_token',null);
