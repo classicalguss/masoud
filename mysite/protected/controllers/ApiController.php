@@ -97,7 +97,7 @@ class ApiController extends Controller
 	}
 	
 	/**
-	 * For logging in the User
+	 * For logging in the User.
 	 */
 	public function actionLogin()
 	{
@@ -218,17 +218,22 @@ class ApiController extends Controller
 	
 		if (empty($type))
 		{
-			echo json_encode(array('status' =>'error','error_code'=>1,'message'=>'type was not provided'));
+			echo json_encode(array('status' =>'error','error_code'=>2,'message'=>'type was not provided'));
 			Yii::app()->end();
 		}
 		else if (empty($title))
 		{
-			echo json_encode(array('status' =>'error','error_code'=>1,'message'=>'title was not provided'));
+			echo json_encode(array('status' =>'error','error_code'=>3,'message'=>'title was not provided'));
 			Yii::app()->end();
 		}
 		else if (empty($content))
 		{
-			echo json_encode(array('status' =>'error','error_code'=>1,'message'=>'content was not provided'));
+			echo json_encode(array('status' =>'error','error_code'=>4,'message'=>'content was not provided'));
+			Yii::app()->end();
+		}
+		else if (!in_array($type,[1,2,3,4,5,6]))
+		{
+			echo json_encode(array('status' =>'error','error_code'=>5,'message'=>'type doesnt exist, need to insert one of these (1,2,3,4,5,6)'));
 			Yii::app()->end();
 		}
 	
@@ -256,22 +261,37 @@ class ApiController extends Controller
 	public function actionUserstories()
 	{
 		$userId 	= Yii::app()->request->getParam('user_id',null);
+		$offset = Yii::app()->request->getParam('offset',0);
+		$storiesLimit = 50;
 		
 		$criteria = new CDbCriteria();
 		if($userId !== null)
 		{
 			$criteria->addInCondition('user_id',array($userId));
 		}
+		$criteria->limit = $storiesLimit + 1;
+		$criteria->offset = $offset;
 		$criteria->order = 'posted_date DESC';
 		
 		$userStories = UserStory::model()->findAll($criteria);
+		
+		$moreStoriesExist = false;
+		if (count($userStories) > $storiesLimit)
+		{
+			$moreStoriesExist = true;
+			array_pop($userStories);
+		}
+		
+		$count = count($userStories);
+		
+		$nextOffset = $offset + $count;
 		
 		$stories = array();
 		foreach ($userStories as $userStory)
 		{
 			$stories[] = $userStory->getAttributes();
 		}
-		echo json_encode(array('status' =>'success','stories'=>$stories));
+		echo json_encode(array('status' =>'success','next_offset'=>$nextOffset,'more_stories_exist'=>$moreStoriesExist,'count'=>$count,'stories'=>$stories));
 	}
 
 	/**
