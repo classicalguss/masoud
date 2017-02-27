@@ -1,25 +1,23 @@
 <?php
 
 /**
- * This is the model class for table "user_stories".
+ * This is the model class for table "story_comment".
  *
- * The followings are the available columns in table 'user_stories':
+ * The followings are the available columns in table 'story_comment':
  * @property string $id
+ * @property integer $story_id
  * @property integer $user_id
- * @property string $type
- * @property string $title
- * @property string $hashtags
- * @property string $content
- * @property string $posted_date
+ * @property string $comment
+ * @property string $timestamp
  */
-class UserStory extends CActiveRecord
+class StoryComment extends CActiveRecord
 {
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return 'user_stories';
+		return 'story_comment';
 	}
 
 	/**
@@ -30,13 +28,11 @@ class UserStory extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('user_id, type, title, content', 'required'),
-			array('user_id', 'numerical', 'integerOnly'=>true),
-			array('type', 'length', 'max'=>30),
-			array('title, hashtags', 'length', 'max'=>300),
+			array('story_id, user_id, comment', 'required'),
+			array('story_id, user_id', 'numerical', 'integerOnly'=>true),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, user_id, type, title, hashtags, content, posted_date,comments_count,likes_count', 'safe', 'on'=>'search'),
+			array('id, story_id, user_id, comment', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -58,12 +54,10 @@ class UserStory extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
+			'story_id' => 'Story',
 			'user_id' => 'User',
-			'type' => 'Type',
-			'title' => 'Title',
-			'hashtags' => 'Hashtags',
-			'content' => 'Content',
-			'posted_date' => 'Posted Date',
+			'comment' => 'Comment',
+			'timestamp' => 'Timestamp',
 		);
 	}
 
@@ -86,12 +80,10 @@ class UserStory extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id,true);
+		$criteria->compare('story_id',$this->story_id);
 		$criteria->compare('user_id',$this->user_id);
-		$criteria->compare('type',$this->type,true);
-		$criteria->compare('title',$this->title,true);
-		$criteria->compare('hashtags',$this->hashtags,true);
-		$criteria->compare('content',$this->content,true);
-		$criteria->compare('posted_date',$this->posted_date,true);
+		$criteria->compare('comment',$this->comment,true);
+		$criteria->compare('timestamp',$this->timestamp,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -102,7 +94,7 @@ class UserStory extends CActiveRecord
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
-	 * @return UserStory the static model class
+	 * @return StoryComment the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
