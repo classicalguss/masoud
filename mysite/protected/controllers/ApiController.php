@@ -306,7 +306,7 @@ class ApiController extends Controller
 		}
 		
 		$storyId = Yii::app()->request->getPost('story_id',null);
-		$comment = Yii::app()->request->getPost('comment',null);
+		$comment = Yii::app()->request->getPost('text',null);
 		
 		if (empty($storyId))
 		{
@@ -315,7 +315,7 @@ class ApiController extends Controller
 		}
 		else if (empty($comment))
 		{
-			echo json_encode(array('status' =>'error','error_code'=>3,'message'=>'comment was not provided'));
+			echo json_encode(array('status' =>'error','error_code'=>3,'message'=>'text was not provided'));
 			Yii::app()->end();
 		}
 		
