@@ -492,6 +492,7 @@ class ApiController extends Controller
 		$story->id = null;
 		$story->user_id = Yii::app()->user->id;
 		$story->likes_count = 0;
+		$story->posted_date = date("Y-m-d h:i:s");
 		$story->comments_count = 0;
 		$story->setIsNewRecord(true);
 		
